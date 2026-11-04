@@ -1,0 +1,39 @@
+RewriteEngine On
+RewriteBase /
+
+# Cabeceras de seguridad (mod_headers)
+<IfModule mod_headers.c>
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+</IfModule>
+
+Options -Indexes
+
+# Secretos y almacenamiento (logs pueden contener datos sensibles en dev)
+<FilesMatch "^\.env">
+    Require all denied
+</FilesMatch>
+RewriteRule ^\.env - [F,L]
+RewriteRule ^storage(/|$) - [F,L]
+
+# Sin listado ni descarga directa de código interno
+RewriteRule ^(config|includes|sql|tests)(/|$) - [F,L]
+
+# Canonical: sin .php en la URL (301); QSA conserva ?grupo_id=… (evita 403 con %1%2)
+RewriteCond %{ENV:REDIRECT_STATUS} ^$
+RewriteCond %{THE_REQUEST} \s/+[^\s?]+\.php[\s?] [NC]
+RewriteCond %{REQUEST_URI} !^/health\.php [NC]
+RewriteRule ^(.+?)\.php$ /$1 [R=301,L,QSA]
+
+# Raíz limpia
+RewriteCond %{THE_REQUEST} \s/+index\.php[\s?] [NC]
+RewriteRule ^index\.php$ / [R=301,L]
+
+# Servir *.php sin extensión (rutas anidadas usuario/admin/legal)
+RewriteCond %{REQUEST_URI} !^/assets/ [NC]
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^(.+?)/?$ $1.php [NC,L]
