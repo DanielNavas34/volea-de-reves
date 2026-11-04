@@ -1,11 +1,9 @@
 <?php
 require_once __DIR__ . '/brand.php';
 require_once __DIR__ . '/app_paths.php';
-require_once __DIR__ . '/usuario_avatar.php';
 if (!isset($GLOBALS['app_base_path']) || $GLOBALS['app_base_path'] === '') {
     $GLOBALS['app_base_path'] = '../';
 }
-$navAvatarCtx = $GLOBALS['usuario_avatar_ctx'] ?? null;
 ?>
 <nav class="navbar usuario-navbar" aria-label="Navegación del panel">
     <a href="<?= htmlspecialchars(appUrl('index.php')) ?>" class="public-brand usuario-brand" aria-label="<?= htmlspecialchars(BRAND_NAME) ?> — Inicio">
@@ -17,12 +15,6 @@ $navAvatarCtx = $GLOBALS['usuario_avatar_ctx'] ?? null;
             <span class="public-brand-tag">Mi panel</span>
         </span>
     </a>
-
-    <?php if ($navAvatarCtx !== null): ?>
-        <div class="usuario-navbar-saludo">
-            <?= usuarioSaludoConAvatarHtml($navAvatarCtx, 40, 'usuario-saludo-chip usuario-saludo-chip--nav') ?>
-        </div>
-    <?php endif; ?>
 
     <div class="nav-menu-trigger">
         <span class="nav-menu-label" role="button" tabindex="0" onclick="document.getElementById('hamburger-btn').click();" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();document.getElementById('hamburger-btn').click();}">Menú</span>
@@ -36,11 +28,6 @@ $navAvatarCtx = $GLOBALS['usuario_avatar_ctx'] ?? null;
     </div>
 
     <ul class="nav-links" id="nav-links">
-        <?php if ($navAvatarCtx !== null): ?>
-            <li class="usuario-nav-saludo-mobile">
-                <?= usuarioSaludoConAvatarHtml($navAvatarCtx, 36, 'usuario-saludo-chip usuario-saludo-chip--nav') ?>
-            </li>
-        <?php endif; ?>
         <li><a href="<?= htmlspecialchars(appUrl('usuario/dashboard.php')) ?>">Inicio</a></li>
         <li><a href="<?= htmlspecialchars(appUrl('usuario/pareja.php')) ?>">Mi pareja</a></li>
 
