@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/env.php';
+require_once __DIR__ . '/load_env.php';
 
 /** Esquema pádel (competiciones, parejas, etc.) — tiene prioridad sobre tablas legacy residuales. */
 function padelCompeticionesSchemaAvailable(PDO $db): bool

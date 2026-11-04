@@ -1,7 +1,7 @@
 <?php
 // config/database.php — conexión PDO (credenciales vía .env / entorno)
 
-require_once __DIR__ . '/../includes/env.php';
+require_once __DIR__ . '/../includes/load_env.php';
 
 function getDBConnection(): PDO
 {

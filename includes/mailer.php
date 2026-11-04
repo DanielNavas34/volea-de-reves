@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/env.php';
+require_once __DIR__ . '/load_env.php';
 
 /**
  * Envío real por SMTP (como producción tenis). Modo fake solo si MAIL_DRIVER=fake explícito.

@@ -1,7 +1,7 @@
 <?php
 header('Content-Type: application/json; charset=utf-8');
 
-require_once __DIR__ . '/includes/env.php';
+require_once __DIR__ . '/includes/load_env.php';
 
 $required = ['usuarios', 'parejas', 'competiciones', 'partidos', 'configuracion'];
 

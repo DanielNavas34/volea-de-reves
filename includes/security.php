@@ -41,7 +41,7 @@ function sanitizeOutput($string) {
  */
 function registrationRateLimitEnabled(): bool
 {
-    require_once __DIR__ . '/env.php';
+    require_once __DIR__ . '/load_env.php';
     $explicit = env('REGISTRATION_RATE_LIMIT');
     if ($explicit !== null && $explicit !== '') {
         return in_array(strtolower(trim($explicit)), ['1', 'true', 'yes', 'on'], true);

@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/env.php';
+require_once __DIR__ . '/load_env.php';
 
 /** IP del cliente (respeta un proxy de confianza si TRUSTED_PROXY=true). */
 function requestClientIp(): string

@@ -68,7 +68,7 @@ check(is_readable($root . '/includes/app_errors.php'), 'app_errors.php presente'
 
 $envPath = $root . '/.env';
 if (is_readable($envPath)) {
-    require_once $root . '/includes/env.php';
+    require_once $root . '/includes/load_env.php';
     echo "\n--- Avisos .env local (no bloquean) ---\n";
     $env = env('APP_ENV', '');
     $debug = env('APP_DEBUG', '');

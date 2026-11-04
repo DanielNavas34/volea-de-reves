@@ -2,7 +2,7 @@
 # GitHub → Settings → Secrets: FTP_SERVER, FTP_USERNAME, FTP_PASSWORD
 # Opcional: FTP_SERVER_DIR (ej. /htdocs)
 #
-# El .env NO se sube: créalo solo en el panel/FTP del hosting.
+# El .env y includes/env.php NO se suben: créalos solo en el hosting (copia desde *.example).
 
 name: Deploy FTPS
 
@@ -30,6 +30,7 @@ jobs:
             **/.env.*
             !**/.env.example
             !**/.env.staging.example
+            **/includes/env.php
             **/config/mail.local.php
             **/tests/**
             **/docker-compose*.yml

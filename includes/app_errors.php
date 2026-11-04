@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/env.php';
+require_once __DIR__ . '/load_env.php';
 
 /** Detalle técnico (SQL, etc.) solo en local o con APP_DEBUG=true. */
 function appExposeErrorDetails(): bool

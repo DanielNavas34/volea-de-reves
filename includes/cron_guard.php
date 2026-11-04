@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/env.php';
+require_once __DIR__ . '/load_env.php';
 
 /**
  * Cron: CLI o HTTP con CRON_SECRET (?cron_secret= o cabecera X-Cron-Secret).

@@ -3,6 +3,7 @@
 .env.*.local
 !.env.example
 !.env.staging.example
+includes/env.php
 config/mail.local.php
 
 backup*.sql

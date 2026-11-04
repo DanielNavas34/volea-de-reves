@@ -1,3 +1,5 @@
+# Local: puedes usar el mismo .env que InfinityFree; DB_* del contenedor web apunta al servicio `db`.
+# Contraseña MySQL local: LOCAL_DB_PASSWORD en .env o .env.local (Compose lee .env para ${...}), o el default.
 services:
   web:
     build: .
@@ -9,6 +11,11 @@ services:
       - .env
     environment:
       DB_HOST: db
+      DB_PORT: "3306"
+      DB_NAME: liga_padel
+      DB_USER: admin_padel
+      DB_PASSWORD: ${LOCAL_DB_PASSWORD:-cambiar_en_local}
+      DB_CHARSET: utf8mb4
     depends_on:
       - db
 
@@ -16,13 +23,11 @@ services:
     image: mysql:8.0
     ports:
       - "3306:3306"
-    env_file:
-      - .env
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${DB_NAME}
-      MYSQL_USER: ${DB_USER}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-cambiar_root_en_local}
+      MYSQL_DATABASE: liga_padel
+      MYSQL_USER: admin_padel
+      MYSQL_PASSWORD: ${LOCAL_DB_PASSWORD:-cambiar_en_local}
     volumes:
       - db_data:/var/lib/mysql
       - ./sql/liga_padel_init.sql:/docker-entrypoint-initdb.d/01-liga_padel.sql:ro

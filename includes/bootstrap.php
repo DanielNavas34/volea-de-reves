@@ -5,7 +5,7 @@
  * Carga entorno, sesión segura y comprobaciones de esquema Volea de revés.
  */
 
-require_once __DIR__ . '/env.php';
+require_once __DIR__ . '/load_env.php';
 require_once __DIR__ . '/https_guard.php';
 
 appEnforceHttpsIfRequired();
