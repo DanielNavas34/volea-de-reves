@@ -72,6 +72,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['rol'] = $user['rol'];
                 $_SESSION['tipo_perfil'] = $user['tipo_perfil'] ?? 'liga';
                 $_SESSION['password_changed_at'] = $user['password_changed_at'] ?? null;
+                require_once __DIR__ . '/includes/usuario_avatar.php';
+                usuarioAvatarRefreshSession($db, (int) $user['id']);
 
                 if (isset($_SESSION['redirect_after_login'])) {
                     $url_destino = $_SESSION['redirect_after_login'];

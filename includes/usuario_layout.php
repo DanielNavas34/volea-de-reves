@@ -11,8 +11,18 @@ function usuarioLayoutStart(string $pageTitle, int $totalNotificaciones = 0, str
 {
     require_once __DIR__ . '/brand.php';
     require_once __DIR__ . '/app_paths.php';
+    require_once __DIR__ . '/usuario_avatar.php';
     $GLOBALS['app_base_path'] = '../';
     $GLOBALS['total_notificaciones'] = $totalNotificaciones;
+    $GLOBALS['usuario_avatar_ctx'] = null;
+    if (!empty($_SESSION['usuario_id'])) {
+        require_once __DIR__ . '/../config/database.php';
+        try {
+            $GLOBALS['usuario_avatar_ctx'] = usuarioAvatarContextForSession(getDBConnection());
+        } catch (Throwable) {
+            $GLOBALS['usuario_avatar_ctx'] = usuarioAvatarContextForSession(null);
+        }
+    }
     ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -48,14 +58,25 @@ function usuarioLayoutEnd(string $inlineScript = ''): void
     <?php
 }
 
-function usuarioPageHeading(string $title): void
+/**
+ * @param array{nombre?: string, apellidos?: string, foto_perfil?: ?string}|null $avatarUser
+ */
+function usuarioPageHeading(string $title, ?array $avatarUser = null): void
 {
     if (!function_exists('brandImageUrl')) {
         require_once __DIR__ . '/brand.php';
     }
+    if ($avatarUser === null) {
+        $avatarUser = $GLOBALS['usuario_avatar_ctx'] ?? null;
+    }
     echo '<header class="usuario-page-heading">';
     echo '<span class="usuario-title-logo-wrap" aria-hidden="true">';
-    echo '<img src="' . htmlspecialchars(brandImageUrl('usuario')) . '" alt="" class="usuario-title-logo" width="52" height="52">';
+    if ($avatarUser !== null) {
+        require_once __DIR__ . '/usuario_avatar.php';
+        echo usuarioAvatarHtml($avatarUser, 52, 'usuario-avatar--heading');
+    } else {
+        echo '<img src="' . htmlspecialchars(brandImageUrl('usuario')) . '" alt="" class="usuario-title-logo" width="52" height="52">';
+    }
     echo '</span>';
     echo '<h1 class="panel-title">' . htmlspecialchars($title) . '</h1>';
     echo '</header>';

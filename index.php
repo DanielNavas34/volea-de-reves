@@ -7,8 +7,10 @@ require_once 'includes/public_home_helpers.php';
 require_once 'includes/padel_ui_helpers.php';
 require_once 'includes/panel_url.php';
 require_once 'includes/brand.php';
+require_once 'includes/usuario_avatar.php';
 
 $db = getDBConnection();
+$homeAvatarCtx = !empty($_SESSION['usuario_id']) ? usuarioAvatarContextForSession($db) : null;
 $instalacionPendiente = !voleaPadelInstallReadyOrEmpty($db);
 $home = loadPublicHomePage($db);
 
@@ -39,6 +41,12 @@ $ultimosResultados = $home['ultimosResultados'];
         <h1 id="hero-title" class="public-hero-title">Volea de revés</h1>
         <p class="public-hero-lead">Ligas por parejas y Pulls con inscripción individual: rotación de pista y compañeros.</p>
 
+        <?php if (isset($_GET['msg']) && $_GET['msg'] === 'cuenta_eliminada'): ?>
+            <div class="alert alert-success public-hero-alert" role="status">
+                Tu cuenta ha sido eliminada permanentemente.
+            </div>
+        <?php endif; ?>
+
         <?php if ($instalacionPendiente): ?>
             <div class="alert alert-warning public-hero-alert" role="alert">
                 Base de datos no configurada. <a href="instalacion_requerida.php">Ver instrucciones</a>
@@ -54,7 +62,11 @@ $ultimosResultados = $home['ultimosResultados'];
 
         <div class="hero-auth-buttons public-hero-actions">
             <?php if (isset($_SESSION['usuario_id'])): ?>
-                <span class="public-session-chip">Hola, <?= htmlspecialchars($_SESSION['nombre'] ?? 'jugador') ?></span>
+                <?php if ($homeAvatarCtx !== null): ?>
+                    <?= usuarioSaludoConAvatarHtml($homeAvatarCtx, 44, 'public-session-chip usuario-saludo-chip') ?>
+                <?php else: ?>
+                    <span class="public-session-chip">Hola, <?= htmlspecialchars($_SESSION['nombre'] ?? 'jugador') ?></span>
+                <?php endif; ?>
                 <a href="<?= htmlspecialchars(panelUrlForSession()) ?>" class="btn btn-primary">Ir a mi panel</a>
                 <a href="logout.php" class="btn btn-danger-soft">Cerrar sesión</a>
             <?php else: ?>

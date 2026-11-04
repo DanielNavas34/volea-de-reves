@@ -6,10 +6,12 @@ require_once '../includes/competiciones_helpers.php';
 require_once '../includes/pull_engine.php';
 require_once '../includes/admin_sidebar.php';
 require_once '../includes/security.php';
+require_once '../includes/usuario_avatar.php';
 
 requireAdmin();
 
 $db = getDBConnection();
+$adminAvatarCtx = !empty($_SESSION['usuario_id']) ? usuarioAvatarContextForSession($db) : null;
 $esquemaPadel = padelCompeticionesSchemaAvailable($db);
 
 $total_usuarios = (int) $db->query("SELECT COUNT(*) FROM usuarios WHERE rol = 'usuario'")->fetchColumn();
@@ -115,7 +117,12 @@ if ($esquemaPadel) {
 <div class="dashboard-wrapper">
     <?php renderAdminSidebar('dashboard'); ?>
     <main class="main-content usuario-main">
-        <h1 class="panel-title">Hola, <?= sanitizeOutput($_SESSION['nombre']) ?></h1>
+        <header class="usuario-page-heading admin-page-heading-hola">
+            <?php if ($adminAvatarCtx !== null): ?>
+                <span class="usuario-title-logo-wrap" aria-hidden="true"><?= usuarioAvatarHtml($adminAvatarCtx, 52, 'usuario-avatar--heading') ?></span>
+            <?php endif; ?>
+            <h1 class="panel-title">Hola, <?= sanitizeOutput($_SESSION['nombre']) ?></h1>
+        </header>
         <p class="panel-subtitle">Centro de control · Volea de revés</p>
 
         <?php if ($success_msg): ?><div class="alert alert-success"><?= htmlspecialchars($success_msg) ?></div><?php endif; ?>

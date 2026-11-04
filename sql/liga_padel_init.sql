@@ -11,6 +11,7 @@ CREATE TABLE usuarios (
   apellidos VARCHAR(100) NOT NULL,
   email VARCHAR(150) NOT NULL,
   telefono VARCHAR(15) NOT NULL DEFAULT '',
+  foto_perfil VARCHAR(120) DEFAULT NULL,
   password VARCHAR(255) NOT NULL,
   rol ENUM('usuario','admin') NOT NULL DEFAULT 'usuario',
   activo TINYINT(1) NOT NULL DEFAULT 1,

@@ -21,6 +21,7 @@ legalLayoutStart('Términos de uso');
                 <li>Consultar calendarios, resultados y clasificaciones.</li>
                 <li>Reportar y validar resultados de partidos conforme a las reglas de la competición.</li>
                 <li>Recibir comunicaciones operativas relacionadas con la actividad deportiva.</li>
+                <li>Gestionar el perfil de usuario (datos personales, foto opcional, contraseña y baja de cuenta) desde el área privada «Mi perfil».</li>
             </ul>
             <p>El titular ([TU NOMBRE / EMPRESA]) puede modificar funcionalidades, horarios de mantenimiento o condiciones de acceso, informando cuando sea razonablemente posible.</p>
         </section>
@@ -29,6 +30,7 @@ legalLayoutStart('Términos de uso');
             <h2>3. Registro y cuenta</h2>
             <p>El usuario debe facilitar datos veraces y mantener la confidencialidad de sus credenciales. Es responsable de la actividad realizada desde su cuenta. Debe notificar de inmediato cualquier uso no autorizado a [EMAIL DE CONTACTO].</p>
             <p>La verificación de correo electrónico mediante PIN puede ser obligatoria para activar la cuenta.</p>
+            <p>Desde <strong>Mi perfil</strong> el usuario puede actualizar nombre, apellidos y teléfono, cambiar su contraseña (previa confirmación de la contraseña actual) y, opcionalmente, subir o eliminar una foto de perfil. La foto debe ser apta para un entorno deportivo (sin contenido ofensivo o ilícito); el titular puede retirar imágenes que incumplan estas reglas.</p>
         </section>
 
         <section class="legal-doc-section">
@@ -49,7 +51,7 @@ legalLayoutStart('Términos de uso');
 
         <section class="legal-doc-section">
             <h2>6. Propiedad de los contenidos aportados</h2>
-            <p>El usuario conserva los derechos sobre los datos y contenidos que aporte, pero concede al titular una licencia no exclusiva, gratuita y limitada al funcionamiento del servicio (mostrar nombres en clasificaciones, resultados, etc.).</p>
+            <p>El usuario conserva los derechos sobre los datos y contenidos que aporte, pero concede al titular una licencia no exclusiva, gratuita y limitada al funcionamiento del servicio (mostrar nombres en clasificaciones, resultados, foto de perfil en el panel de usuario, etc.).</p>
         </section>
 
         <section class="legal-doc-section">
@@ -59,7 +61,9 @@ legalLayoutStart('Términos de uso');
 
         <section class="legal-doc-section">
             <h2>8. Suspensión y baja</h2>
-            <p>El titular puede suspender o eliminar cuentas por incumplimiento grave de estos términos o del reglamento deportivo. El usuario puede solicitar la baja contactando con [EMAIL DE CONTACTO], sin perjuicio de la conservación de datos exigida legalmente.</p>
+            <p>El titular puede suspender o eliminar cuentas por incumplimiento grave de estos términos o del reglamento deportivo.</p>
+            <p><strong>Baja voluntaria:</strong> el usuario puede eliminar su cuenta de forma permanente desde <strong>Mi perfil</strong>, marcando la casilla de confirmación e introduciendo su contraseña. Se le advertirá de que la acción es irreversible y supondrá la eliminación de su usuario, pareja, inscripciones, datos de pulls y demás información vinculada en la aplicación, salvo los datos que deban conservarse por obligación legal (facturación, reclamaciones, etc.).</p>
+            <p>Alternativamente, puede solicitar la baja contactando con [EMAIL DE CONTACTO], sin perjuicio de la conservación de datos exigida legalmente.</p>
         </section>
 
         <section class="legal-doc-section">

@@ -31,6 +31,8 @@ jobs:
             !**/.env.example
             !**/.env.staging.example
             **/includes/env.php
+            **/uploads/**
+            !**/uploads/.htaccess
             **/config/mail.local.php
             **/tests/**
             **/docker-compose*.yml

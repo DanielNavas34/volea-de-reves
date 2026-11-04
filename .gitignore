@@ -6,6 +6,9 @@
 includes/env.php
 config/mail.local.php
 
+/uploads/avatars/*
+!/uploads/avatars/.gitkeep
+
 backup*.sql
 *.sql.gz
 /dumps/

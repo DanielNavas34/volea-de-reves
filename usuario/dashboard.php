@@ -8,6 +8,7 @@ require_once '../includes/usuario_padel_helpers.php';
 require_once '../includes/partido_validacion_mensajes.php';
 require_once '../includes/usuario_layout.php';
 require_once '../includes/perfil_helpers.php';
+require_once '../includes/usuario_perfil_service.php';
 
 requireLogin();
 
@@ -79,7 +80,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion_partido'], $_P
     }
 }
 
-$stmt = $db->prepare('SELECT nombre, apellidos, email, telefono FROM usuarios WHERE id = :id');
+$fotoColDash = usuarioPerfilFotoColumnDisponible($db) ? ', foto_perfil' : '';
+$stmt = $db->prepare("SELECT nombre, apellidos, email, telefono{$fotoColDash} FROM usuarios WHERE id = :id");
 $stmt->execute(['id' => $usuario_id]);
 $jugador = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
 
