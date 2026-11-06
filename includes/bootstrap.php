@@ -7,7 +7,9 @@
 
 require_once __DIR__ . '/load_env.php';
 require_once __DIR__ . '/https_guard.php';
+require_once __DIR__ . '/app_errors.php';
 
+appInstallErrorHandling();
 appEnforceHttpsIfRequired();
 
 function appEnsureSession(): void

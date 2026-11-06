@@ -71,8 +71,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $error = 'Las contraseñas no coinciden.';
             $vista_actual = 'nueva_password';
             $token_valido = $token;
-        } elseif (strlen($password) < 8) {
-            $error = 'La contraseña debe tener al menos 8 caracteres.';
+        } elseif (($pwdError = passwordPolicyError($password)) !== null) {
+            $error = $pwdError;
             $vista_actual = 'nueva_password';
             $token_valido = $token;
         } else {

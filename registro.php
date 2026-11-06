@@ -77,8 +77,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $error = 'Debes aceptar los Términos de Uso y la Política de Privacidad para crear una cuenta.';
         } elseif ($password !== $confirm_password) {
             $error = "Las contraseñas no coinciden.";
-        } elseif (strlen($password) < 8) {
-            $error = "La contraseña debe tener al menos 8 caracteres.";
+        } elseif (($pwdError = passwordPolicyError($password, $email)) !== null) {
+            $error = $pwdError;
         } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL) || !preg_match($email_regex, $email)) {
             $error = "El formato del correo no es válido o la extensión no está permitida (Usa .com, .es, .net, etc.).";
         } elseif (!preg_match($telefono_regex, $telefono)) {

@@ -29,7 +29,7 @@ function renderAdminSidebar(string $adminNavActive = 'dashboard'): void
             <?= $link('calendario', 'calendario_pendientes', 'Calendario pendiente') ?>
             <?= $link('incidencias', 'incidencias_partidos', 'Incidencias') ?>
             <?= $link('grupos', 'grupos', 'Ligas y grupos') ?>
-            <a href="<?= htmlspecialchars(appUrl('logout.php')) ?>" class="btn" style="background-color: #dc3545; color: white; margin-top: 2rem;">Cerrar Sesión</a>
+            <a href="<?= htmlspecialchars(appLogoutUrl()) ?>" class="btn" style="background-color: #dc3545; color: white; margin-top: 2rem;">Cerrar Sesión</a>
         </nav>
     </aside>
     <?php

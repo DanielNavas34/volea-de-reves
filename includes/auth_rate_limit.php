@@ -2,16 +2,19 @@
 
 require_once __DIR__ . '/load_env.php';
 
-/** IP del cliente (respeta un proxy de confianza si TRUSTED_PROXY=true). */
+/**
+ * IP del cliente (respeta un proxy de confianza si TRUSTED_PROXY=true).
+ * Se usa la última entrada de X-Forwarded-For: la añade el proxy; las anteriores las controla el cliente.
+ */
 function requestClientIp(): string
 {
     $trust = env('TRUSTED_PROXY');
     $trusted = $trust !== null && in_array(strtolower(trim($trust)), ['1', 'true', 'yes', 'on'], true);
     if ($trusted && !empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
         $parts = array_map('trim', explode(',', (string) $_SERVER['HTTP_X_FORWARDED_FOR']));
-        $first = $parts[0] ?? '';
-        if ($first !== '' && filter_var($first, FILTER_VALIDATE_IP)) {
-            return $first;
+        $last = (string) end($parts);
+        if ($last !== '' && filter_var($last, FILTER_VALIDATE_IP)) {
+            return $last;
         }
     }
 

@@ -7,6 +7,7 @@ RewriteBase /
     Header always set X-Content-Type-Options "nosniff"
     Header always set Referrer-Policy "strict-origin-when-cross-origin"
     Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+    Header always set Content-Security-Policy "frame-ancestors 'self'; object-src 'none'; base-uri 'self'; form-action 'self'"
 </IfModule>
 
 Options -Indexes
@@ -19,7 +20,8 @@ RewriteRule ^\.env - [F,L]
 RewriteRule ^storage(/|$) - [F,L]
 
 # Sin listado ni descarga directa de código interno
-RewriteRule ^(config|includes|sql|tests)(/|$) - [F,L]
+RewriteRule ^(config|includes|sql|tests|docs|scripts|libs|_legacy_deprecated)(/|$) - [F,L]
+RewriteRule (^|/)[^/]+\.md$ - [F,L]
 
 # Canonical: sin .php en la URL (301); QSA conserva ?grupo_id=… (evita 403 con %1%2)
 RewriteCond %{ENV:REDIRECT_STATUS} ^$

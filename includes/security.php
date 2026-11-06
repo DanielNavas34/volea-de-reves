@@ -3,6 +3,7 @@
 
 require_once __DIR__ . '/bootstrap.php';
 require_once __DIR__ . '/app_errors.php';
+require_once __DIR__ . '/password_policy.php';
 appEnsureSession();
 
 function generateCSRFToken() {

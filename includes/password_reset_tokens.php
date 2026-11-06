@@ -20,10 +20,6 @@ function passwordResetTokenMatches(?string $storedHash, string $plainToken): boo
     if ($plain === '') {
         return false;
     }
-    // Compatibilidad: tokens antiguos en claro (64 hex) durante migración
-    if (strlen($storedHash) === 64 && ctype_xdigit($storedHash) && hash_equals($storedHash, $plain)) {
-        return true;
-    }
 
     return hash_equals($storedHash, passwordResetTokenHash($plain));
 }
@@ -43,10 +39,10 @@ function passwordResetFindUserId(PDO $db, string $plainToken): ?int
     $hash = passwordResetTokenStoreHash($plain);
     $stmt = $db->prepare(
         'SELECT id, token_recuperacion FROM usuarios
-         WHERE (token_recuperacion = :hash OR token_recuperacion = :plain) AND expiracion_token > NOW()
+         WHERE token_recuperacion = :hash AND expiracion_token > NOW()
          LIMIT 1'
     );
-    $stmt->execute(['hash' => $hash, 'plain' => $plain]);
+    $stmt->execute(['hash' => $hash]);
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
     if (!$row || !passwordResetTokenMatches((string) ($row['token_recuperacion'] ?? ''), $plain)) {
         return null;

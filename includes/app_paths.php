@@ -37,6 +37,20 @@ function appUrl(string $path): string
     return $base . $clean;
 }
 
+/** Enlace de cierre de sesión con token CSRF (logout.php lo exige). */
+function appLogoutUrl(): string
+{
+    $url = appUrl('logout.php');
+    if (session_status() !== PHP_SESSION_ACTIVE) {
+        return $url;
+    }
+    if (empty($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+
+    return $url . '?t=' . rawurlencode((string) $_SESSION['csrf_token']);
+}
+
 /** Redirección HTTP a ruta sin .php (respeta app_base_path). */
 function redirectTo(string $path, int $status = 302): never
 {

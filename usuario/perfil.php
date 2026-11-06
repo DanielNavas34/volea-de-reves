@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         );
         if ($result['ok']) {
             $mensaje = $result['message'];
-            if (isset($result['password_changed_at'])) {
+            if (array_key_exists('password_changed_at', $result)) {
                 $_SESSION['password_changed_at'] = $result['password_changed_at'];
             }
         } else {

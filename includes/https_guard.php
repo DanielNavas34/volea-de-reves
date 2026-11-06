@@ -36,7 +36,13 @@ function appEnforceHttpsIfRequired(): void
     if (PHP_SAPI === 'cli' || PHP_SAPI === 'phpdbg') {
         return;
     }
-    if (!appForceHttpsEnabled() || appIsHttpsRequest()) {
+    if (!appForceHttpsEnabled()) {
+        return;
+    }
+    if (appIsHttpsRequest()) {
+        if (!headers_sent()) {
+            header('Strict-Transport-Security: max-age=15552000');
+        }
         return;
     }
     $host = $_SERVER['HTTP_HOST'] ?? '';

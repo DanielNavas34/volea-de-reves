@@ -29,26 +29,35 @@ function enforceEmailVerifiedSession(): void
     redirectTo('registro.php');
 }
 
-function enforcePasswordChangedAtSession(): void
+/**
+ * Revalida la sesión contra la BD: cuenta borrada o desactivada, o contraseña cambiada → logout.
+ * El rol y el tipo de perfil se toman siempre de la BD (un admin degradado pierde el acceso al momento).
+ */
+function enforceSessionUserState(): void
 {
     if (empty($_SESSION['usuario_id'])) {
         return;
     }
     require_once __DIR__ . '/../config/database.php';
     $db = getDBConnection();
-    if (!dbColumnExists($db, 'usuarios', 'password_changed_at')) {
-        return;
-    }
-    $stmt = $db->prepare('SELECT password_changed_at FROM usuarios WHERE id = :id LIMIT 1');
+    $hasPwdCol = dbColumnExists($db, 'usuarios', 'password_changed_at');
+    $pwdCol = $hasPwdCol ? ', password_changed_at' : '';
+    $stmt = $db->prepare("SELECT rol, activo, tipo_perfil{$pwdCol} FROM usuarios WHERE id = :id LIMIT 1");
     $stmt->execute(['id' => (int) $_SESSION['usuario_id']]);
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    $dbVal = $row['password_changed_at'] ?? null;
-    $sessVal = $_SESSION['password_changed_at'] ?? null;
-    $dbNorm = $dbVal !== null ? (string) $dbVal : '';
-    $sessNorm = $sessVal !== null ? (string) $sessVal : '';
-    if ($dbNorm === $sessNorm) {
+
+    $valida = $row && (int) ($row['activo'] ?? 0) === 1;
+    if ($valida && $hasPwdCol) {
+        $dbVal = $row['password_changed_at'] ?? null;
+        $sessVal = $_SESSION['password_changed_at'] ?? null;
+        $valida = ($dbVal !== null ? (string) $dbVal : '') === ($sessVal !== null ? (string) $sessVal : '');
+    }
+    if ($valida) {
+        $_SESSION['rol'] = (string) $row['rol'];
+        $_SESSION['tipo_perfil'] = $row['tipo_perfil'] ?? 'liga';
         return;
     }
+
     $_SESSION = [];
     if (ini_get('session.use_cookies')) {
         $params = session_get_cookie_params();
@@ -64,14 +73,14 @@ function requireLogin(): void
     if (!isset($_SESSION['usuario_id'])) {
         redirectTo('login.php');
     }
-    enforcePasswordChangedAtSession();
+    enforceSessionUserState();
     enforceEmailVerifiedSession();
 }
 
 function requireAdmin(): void
 {
     requireLogin();
-    if ($_SESSION['rol'] !== 'admin') {
+    if (($_SESSION['rol'] ?? '') !== 'admin') {
         header('HTTP/1.1 403 Forbidden');
         die('Acceso denegado. Esta sección requiere privilegios de administrador.');
     }

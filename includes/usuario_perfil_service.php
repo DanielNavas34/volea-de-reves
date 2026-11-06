@@ -3,8 +3,11 @@
 require_once __DIR__ . '/legacy_schema.php';
 require_once __DIR__ . '/app_errors.php';
 require_once __DIR__ . '/admin_maintenance_service.php';
+require_once __DIR__ . '/password_policy.php';
 
 const USUARIO_PERFIL_FOTO_MAX_BYTES = 2097152; // 2 MB (hosting gratuito)
+const USUARIO_PERFIL_FOTO_MAX_PIXELES = 16000000; // limita la memoria al decodificar
+const USUARIO_PERFIL_FOTO_MAX_LADO = 512;
 
 /** @return list<string> */
 function usuarioPerfilFotoExtensionesPermitidas(): array
@@ -106,31 +109,40 @@ function usuarioPerfilActualizarDatos(PDO $db, int $usuarioId, string $nombre, s
 
 function usuarioPerfilCambiarPassword(PDO $db, int $usuarioId, string $actual, string $nueva, string $repetir): array
 {
-    if (strlen($nueva) < 8) {
-        return ['ok' => false, 'message' => 'La nueva contraseña debe tener al menos 8 caracteres.'];
-    }
     if ($nueva !== $repetir) {
         return ['ok' => false, 'message' => 'La nueva contraseña y la repetición no coinciden.'];
     }
 
-    $stmt = $db->prepare('SELECT password, rol FROM usuarios WHERE id = :id LIMIT 1');
+    $stmt = $db->prepare('SELECT password, rol, email FROM usuarios WHERE id = :id LIMIT 1');
     $stmt->execute(['id' => $usuarioId]);
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
     if (!$row || !password_verify($actual, (string) $row['password'])) {
         return ['ok' => false, 'message' => 'La contraseña actual no es correcta.'];
     }
+    $pwdError = passwordPolicyError($nueva, (string) ($row['email'] ?? ''));
+    if ($pwdError !== null) {
+        return ['ok' => false, 'message' => $pwdError];
+    }
 
     $hash = password_hash($nueva, PASSWORD_BCRYPT);
     $hasPwdCol = dbColumnExists($db, 'usuarios', 'password_changed_at');
-    if ($hasPwdCol) {
-        $db->prepare(
-            'UPDATE usuarios SET password = :p, password_changed_at = NOW() WHERE id = :id'
-        )->execute(['p' => $hash, 'id' => $usuarioId]);
-    } else {
+    if (!$hasPwdCol) {
         $db->prepare('UPDATE usuarios SET password = :p WHERE id = :id')->execute(['p' => $hash, 'id' => $usuarioId]);
+
+        return ['ok' => true, 'message' => 'Contraseña cambiada. Usa la nueva en tu próximo inicio de sesión.'];
     }
 
-    return ['ok' => true, 'message' => 'Contraseña cambiada. Usa la nueva en tu próximo inicio de sesión.', 'password_changed_at' => date('Y-m-d H:i:s')];
+    $db->prepare(
+        'UPDATE usuarios SET password = :p, password_changed_at = NOW() WHERE id = :id'
+    )->execute(['p' => $hash, 'id' => $usuarioId]);
+    $stmt = $db->prepare('SELECT password_changed_at FROM usuarios WHERE id = :id LIMIT 1');
+    $stmt->execute(['id' => $usuarioId]);
+
+    return [
+        'ok' => true,
+        'message' => 'Contraseña cambiada. Usa la nueva en tu próximo inicio de sesión.',
+        'password_changed_at' => $stmt->fetchColumn() ?: null,
+    ];
 }
 
 function usuarioPerfilEliminarArchivosFoto(int $usuarioId, ?string $exceptFilename = null): void
@@ -139,13 +151,76 @@ function usuarioPerfilEliminarArchivosFoto(int $usuarioId, ?string $exceptFilena
     if (!is_dir($dir)) {
         return;
     }
-    foreach (glob($dir . DIRECTORY_SEPARATOR . 'u' . $usuarioId . '.*') ?: [] as $path) {
+    foreach (glob($dir . DIRECTORY_SEPARATOR . 'u' . $usuarioId . '[._]*') ?: [] as $path) {
         $base = basename($path);
         if ($exceptFilename !== null && $base === $exceptFilename) {
             continue;
         }
         @unlink($path);
     }
+}
+
+function usuarioPerfilFotoExtensionDesdeMime(string $mime): ?string
+{
+    return match ($mime) {
+        'image/jpeg' => 'jpg',
+        'image/png' => 'png',
+        'image/webp' => 'webp',
+        default => null,
+    };
+}
+
+/** Vuelve a generar la imagen con GD: elimina metadatos (EXIF/GPS) y cualquier contenido incrustado. */
+function usuarioPerfilFotoRecodificar(string $src, string $dest, string $ext): bool
+{
+    $data = @file_get_contents($src);
+    $img = $data !== false ? @imagecreatefromstring($data) : false;
+    if ($img === false) {
+        return false;
+    }
+
+    if ($ext === 'jpg' && function_exists('exif_read_data')) {
+        $exif = @exif_read_data($src);
+        $angle = match ((int) ($exif['Orientation'] ?? 1)) {
+            3 => 180,
+            6 => -90,
+            8 => 90,
+            default => 0,
+        };
+        if ($angle !== 0) {
+            $rotated = imagerotate($img, $angle, 0);
+            if ($rotated !== false) {
+                imagedestroy($img);
+                $img = $rotated;
+            }
+        }
+    }
+
+    $w = imagesx($img);
+    $h = imagesy($img);
+    $max = USUARIO_PERFIL_FOTO_MAX_LADO;
+    if ($w > $max || $h > $max) {
+        $scale = min($max / $w, $max / $h);
+        $scaled = imagescale($img, max(1, (int) round($w * $scale)), max(1, (int) round($h * $scale)));
+        if ($scaled !== false) {
+            imagedestroy($img);
+            $img = $scaled;
+        }
+    }
+    if ($ext !== 'jpg') {
+        imagealphablending($img, false);
+        imagesavealpha($img, true);
+    }
+
+    $ok = match ($ext) {
+        'jpg' => imagejpeg($img, $dest, 85),
+        'png' => imagepng($img, $dest, 6),
+        'webp' => function_exists('imagewebp') && imagewebp($img, $dest, 85),
+        default => false,
+    };
+    imagedestroy($img);
+
+    return $ok && is_file($dest);
 }
 
 function usuarioPerfilSubirFoto(PDO $db, int $usuarioId, array $file): array
@@ -174,18 +249,26 @@ function usuarioPerfilSubirFoto(PDO $db, int $usuarioId, array $file): array
     }
 
     $info = @getimagesize($tmp);
-    if ($info === false) {
-        return ['ok' => false, 'message' => 'El archivo no es una imagen válida.'];
+    $ext = $info !== false ? usuarioPerfilFotoExtensionDesdeMime((string) ($info['mime'] ?? '')) : null;
+    if ($ext === null) {
+        return ['ok' => false, 'message' => 'El archivo no es una imagen JPG, PNG o WebP válida.'];
+    }
+    if ((int) $info[0] * (int) $info[1] > USUARIO_PERFIL_FOTO_MAX_PIXELES) {
+        return ['ok' => false, 'message' => 'La imagen tiene demasiada resolución. Redúcela e inténtalo de nuevo.'];
+    }
+    if (!function_exists('imagecreatefromstring')) {
+        return ['ok' => false, 'message' => 'El servidor no puede procesar imágenes ahora mismo. Inténtalo más tarde.'];
     }
 
     usuarioPerfilAsegurarDirectorioAvatars();
-    $filename = 'u' . $usuarioId . '.' . ($ext === 'jpeg' ? 'jpg' : $ext);
+    $filename = 'u' . $usuarioId . '_' . bin2hex(random_bytes(8)) . '.' . $ext;
     $dest = usuarioPerfilAvatarsDir() . DIRECTORY_SEPARATOR . $filename;
-    usuarioPerfilEliminarArchivosFoto($usuarioId, $filename);
 
-    if (!move_uploaded_file($tmp, $dest)) {
-        return ['ok' => false, 'message' => 'No se pudo guardar la imagen en el servidor.'];
+    if (!usuarioPerfilFotoRecodificar($tmp, $dest, $ext)) {
+        @unlink($dest);
+        return ['ok' => false, 'message' => 'No se pudo procesar la imagen. Prueba con otro archivo.'];
     }
+    usuarioPerfilEliminarArchivosFoto($usuarioId, $filename);
 
     $relative = 'uploads/avatars/' . $filename;
     $db->prepare('UPDATE usuarios SET foto_perfil = :f WHERE id = :id')->execute([

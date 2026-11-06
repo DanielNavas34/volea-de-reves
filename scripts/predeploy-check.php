@@ -7,6 +7,11 @@ declare(strict_types=1);
  * Uso: php scripts/predeploy-check.php
  */
 
+if (PHP_SAPI !== 'cli') {
+    http_response_code(404);
+    exit;
+}
+
 $root = dirname(__DIR__);
 $fail = 0;
 

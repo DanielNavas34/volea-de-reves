@@ -23,16 +23,11 @@ try {
 
     if ($missing !== []) {
         http_response_code(503);
-        echo json_encode(['ok' => false, 'database' => $dbName, 'missing_tables' => $missing], JSON_UNESCAPED_UNICODE);
+        echo json_encode(['ok' => false, 'error' => 'schema_incomplete'], JSON_UNESCAPED_UNICODE);
         exit;
     }
 
-    echo json_encode([
-        'ok' => true,
-        'database' => $dbName,
-        'app' => 'volea-de-reves',
-        'bootstrap' => 'includes/bootstrap.php',
-    ], JSON_UNESCAPED_UNICODE);
+    echo json_encode(['ok' => true], JSON_UNESCAPED_UNICODE);
 } catch (Throwable $e) {
     http_response_code(503);
     $payload = ['ok' => false, 'error' => 'database_unavailable'];

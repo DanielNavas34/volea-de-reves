@@ -33,7 +33,7 @@ require_once __DIR__ . '/app_paths.php';
             <li><a href="<?= htmlspecialchars(appUrl('registro.php')) ?>">Registrarse</a></li>
         <?php else: ?>
             <li><a href="<?= htmlspecialchars(appUrl(panelUrlForSession())) ?>">Mi panel</a></li>
-            <li><a href="<?= htmlspecialchars(appUrl('logout.php')) ?>">Cerrar sesión</a></li>
+            <li><a href="<?= htmlspecialchars(appLogoutUrl()) ?>">Cerrar sesión</a></li>
         <?php endif; ?>
     </ul>
 </nav>

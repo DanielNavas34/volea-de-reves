@@ -38,7 +38,7 @@ try {
         }
     }
 
-    foreach (['test_csrf_generate_and_verify', 'test_legacy_tenis_guard_function_exists', 'test_bootstrap_fase3_functions', 'test_competition_service_class_exists', 'test_match_service_class_exists', 'test_standings_service_class_exists', 'test_history_service_class_exists', 'test_padel_ui_helpers_loaded', 'test_mailer_verification_helpers', 'test_enviar_correo_pin_fake_driver', 'test_mailer_recovery_helpers', 'test_password_reset_token_hash_and_match', 'test_password_reset_legacy_plain_token', 'test_app_clean_path_strips_php', 'test_partido_cuenta_atras_formato'] as $fnSec) {
+    foreach (['test_csrf_generate_and_verify', 'test_legacy_tenis_guard_function_exists', 'test_bootstrap_fase3_functions', 'test_competition_service_class_exists', 'test_match_service_class_exists', 'test_standings_service_class_exists', 'test_history_service_class_exists', 'test_padel_ui_helpers_loaded', 'test_mailer_verification_helpers', 'test_enviar_correo_pin_fake_driver', 'test_mailer_recovery_helpers', 'test_password_reset_token_hash_and_match', 'test_password_reset_rejects_stored_hash_as_token', 'test_app_clean_path_strips_php', 'test_partido_cuenta_atras_formato'] as $fnSec) {
         if (!function_exists($fnSec) || !$fnSec()) {
             $failed++;
         } else {

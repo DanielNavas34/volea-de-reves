@@ -49,6 +49,6 @@ if (!isset($GLOBALS['app_base_path']) || $GLOBALS['app_base_path'] === '') {
         <li><a href="<?= htmlspecialchars(appUrl('usuario/mis_pulls.php')) ?>">Mis Pulls</a></li>
         <li><a href="<?= htmlspecialchars(appUrl('usuario/perfil.php')) ?>">Mi perfil</a></li>
         <li><a href="<?= htmlspecialchars(appUrl('index.php')) ?>">Página Principal</a></li>
-        <li><a href="<?= htmlspecialchars(appUrl('logout.php')) ?>" class="nav-link-logout">Cerrar Sesión</a></li>
+        <li><a href="<?= htmlspecialchars(appLogoutUrl()) ?>" class="nav-link-logout">Cerrar Sesión</a></li>
     </ul>
 </nav>

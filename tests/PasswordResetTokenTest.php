@@ -22,15 +22,15 @@ function test_password_reset_token_hash_and_match(): bool
     return true;
 }
 
-function test_password_reset_legacy_plain_token(): bool
+function test_password_reset_rejects_stored_hash_as_token(): bool
 {
-    $legacy = bin2hex(random_bytes(32));
-    if (!passwordResetTokenMatches($legacy, $legacy)) {
-        echo "[FAIL] password_reset_legacy_plain\n";
+    $hash = passwordResetTokenStoreHash(passwordResetTokenGenerate());
+    if (passwordResetTokenMatches($hash, $hash)) {
+        echo "[FAIL] password_reset_rejects_stored_hash\n";
 
         return false;
     }
-    echo "[OK] password_reset_legacy_plain\n";
+    echo "[OK] password_reset_rejects_stored_hash\n";
 
     return true;
 }

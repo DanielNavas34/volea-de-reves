@@ -68,7 +68,7 @@ $ultimosResultados = $home['ultimosResultados'];
                     <span class="public-session-chip">Hola, <?= htmlspecialchars($_SESSION['nombre'] ?? 'jugador') ?></span>
                 <?php endif; ?>
                 <a href="<?= htmlspecialchars(panelUrlForSession()) ?>" class="btn btn-primary">Ir a mi panel</a>
-                <a href="logout.php" class="btn btn-danger-soft">Cerrar sesión</a>
+                <a href="<?= htmlspecialchars(appLogoutUrl()) ?>" class="btn btn-danger-soft">Cerrar sesión</a>
             <?php else: ?>
                 <a href="login.php" class="btn btn-primary">Iniciar sesión</a>
                 <a href="registro.php" class="btn btn-secondary">Registrarse</a>
