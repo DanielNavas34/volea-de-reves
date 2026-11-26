@@ -23,3 +23,7 @@ Thumbs.db
 
 # Notas internas de desarrollo (siguen en local, no en el repositorio)
 /docs/*.md
+
+# Parches ya aplicados. El esquema vigente es liga_padel_init.sql
+/sql/*
+!/sql/liga_padel_init.sql

@@ -187,7 +187,7 @@ function pullInsertSlots(PDO $db, int $rondaId, int $pista, array $userIds): voi
 function pullGenerarPrimeraRonda(PDO $db, int $competicionId): int
 {
     if (!pullCuadranteSchemaReady($db)) {
-        throw new RuntimeException('Ejecuta sql/apply_pull_cuadrante.php');
+        throw new RuntimeException('Faltan las tablas del cuadrante de pulls. El esquema de la base de datos no está actualizado.');
     }
     $pull = pullFetchCompeticion($db, $competicionId);
     if (!$pull) {

@@ -68,7 +68,7 @@ usuario/      Player area pages
 includes/     Services and shared logic (auth, matches, standings, pairs, mail…)
 config/       Database connection
 cron/         Scheduled jobs
-sql/          Schema, seed and incremental migrations
+sql/          Schema and seed (`liga_padel_init.sql`)
 tests/        Test suite (custom lightweight runner)
 docs/screenshots/  Images used in this README
 ```

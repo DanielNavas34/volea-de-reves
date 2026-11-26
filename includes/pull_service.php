@@ -38,7 +38,7 @@ function fetchPullIdsInscritoUsuario(PDO $db, int $usuarioId): array
 function inscribirUsuarioEnPull(PDO $db, int $usuarioId, int $competicionId): void
 {
     if (!pullInscripcionesTableExists($db)) {
-        throw new RuntimeException('La tabla inscripciones_pull no existe. Ejecuta la migración sql/update_torneos_a_pull.sql');
+        throw new RuntimeException('La tabla inscripciones_pull no existe. El esquema de la base de datos no está actualizado.');
     }
 
     $tipoIn = competicionTipoPullSqlIn();

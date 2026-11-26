@@ -1,5 +1,0 @@
-ALTER TABLE parejas
-  ADD COLUMN nota_admin TEXT DEFAULT NULL;
-
-ALTER TABLE partidos
-  ADD COLUMN nota_admin TEXT DEFAULT NULL;

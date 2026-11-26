@@ -226,7 +226,7 @@ function usuarioPerfilFotoRecodificar(string $src, string $dest, string $ext): b
 function usuarioPerfilSubirFoto(PDO $db, int $usuarioId, array $file): array
 {
     if (!usuarioPerfilFotoColumnDisponible($db)) {
-        return ['ok' => false, 'message' => 'La base de datos aún no tiene soporte de foto. Ejecuta sql/add_foto_perfil.sql.'];
+        return ['ok' => false, 'message' => 'La base de datos aún no tiene soporte de foto. Importa de nuevo sql/liga_padel_init.sql en una base vacía.'];
     }
     if (!isset($file['error']) || $file['error'] === UPLOAD_ERR_NO_FILE) {
         return ['ok' => false, 'message' => 'Selecciona una imagen.'];

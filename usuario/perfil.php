@@ -121,7 +121,7 @@ if ($error !== '') {
 
 if (!$fotoDisponible) {
     usuarioAlert(
-        'Falta la columna foto_perfil en la base de datos. Ejecuta sql/add_foto_perfil.sql en el servidor para activar la foto de perfil.',
+        'Falta la columna foto_perfil en la base de datos. Hay que actualizar el esquema para activar la foto de perfil.',
         'warning'
     );
 }
