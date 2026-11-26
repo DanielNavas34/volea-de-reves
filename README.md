@@ -70,7 +70,7 @@ config/       Database connection
 cron/         Scheduled jobs
 sql/          Schema, seed and incremental migrations
 tests/        Test suite (custom lightweight runner)
-docs/         Architecture, data model and design decisions
+docs/screenshots/  Images used in this README
 ```
 
 Pages handle HTTP and rendering; business rules live in services under `includes/` (for example `match_service.php`, `standings_service.php`, `pair_service.php`).
@@ -87,7 +87,7 @@ Pages handle HTTP and rendering; business rules live in services under `includes
 - `partido_integrantes_snapshot`: when a match is validated, the four players are frozen, so history stays correct even if a pair changes later.
 - `audit_log`, `login_attempts`, `registro_attempts`, `configuracion`
 
-Standings are only updated through the standings service inside transactions (`SELECT … FOR UPDATE` when reporting results), and can be recalculated from validated matches. Details: [`docs/modelo-datos.md`](docs/modelo-datos.md), [`docs/desempates-liga.md`](docs/desempates-liga.md).
+Standings are only updated through the standings service inside transactions (`SELECT … FOR UPDATE` when reporting results), and can be recalculated from validated matches. Tiebreak order: points, wins, set difference, game difference.
 
 ### Scheduled jobs
 

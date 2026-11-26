@@ -20,3 +20,6 @@ docker-compose.override.yml
 *.log
 .DS_Store
 Thumbs.db
+
+# Notas internas de desarrollo (siguen en local, no en el repositorio)
+/docs/*.md
