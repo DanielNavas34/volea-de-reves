@@ -83,7 +83,5 @@ curl http://localhost:8000/health.php
 
 ## Credenciales de demo (post-init)
 
-Documentar en SQL seed:
-
-- Email admin ficticio y contraseña temporal solo para entorno local.
-- Obligatorio cambiar en cualquier despliegue.
+- Email admin ficticio en el SQL de inicio, solo para entorno local.
+- La contraseña no se escribe en el repositorio. Cambiarla en cualquier despliegue.

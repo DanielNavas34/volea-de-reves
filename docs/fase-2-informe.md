@@ -14,7 +14,7 @@ Documentada en [`arquitectura.md`](arquitectura.md). Implementados bootstrap de 
 
 - Script: [`sql/liga_padel_init.sql`](../sql/liga_padel_init.sql)
 - Tablas núcleo: usuarios, parejas, pareja_miembros, competiciones, competicion_grupos, inscripciones, partidos, partido_sets, clasificacion_parejas, configuracion, audit_log, login/registro attempts.
-- Seeds: config 180/50; admin demo `admin@liga-padel.local` / `AdminPadel123!` (solo local).
+- Seeds: config 180/50; usuario admin ficticio `admin@liga-padel.local` (solo local; la contraseña no está en el repositorio).
 
 ---
 

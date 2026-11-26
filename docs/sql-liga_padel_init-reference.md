@@ -1,8 +1,6 @@
 # Referencia SQL — `liga_padel_init.sql`
 
-Copiar a `sql/liga_padel_init.sql` al implementar. Sin datos personales reales.
-
-Contraseña demo local: `AdminPadel123!` (bcrypt below).
+Copiar a `sql/liga_padel_init.sql` al implementar. Sin datos personales reales. La contraseña del admin de prueba no se documenta aquí.
 
 ```sql
 SET NAMES utf8mb4;
@@ -235,9 +233,8 @@ INSERT INTO configuracion (clave, valor) VALUES
   ('liga_puntos_victoria', '180'),
   ('liga_puntos_derrota', '50');
 
--- bcrypt: AdminPadel123!
 INSERT INTO usuarios (nombre, apellidos, email, telefono, password, rol, email_verificado) VALUES
-  ('Admin', 'Padel', 'admin@liga-padel.local', '600000000', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin', 1);
+  ('Admin', 'Padel', 'admin@liga-padel.local', '600000000', '$2y$10$6BZCTsi5XvOZ9c3IfuMZlO93UX4EH0.15KPGYuaJckTeO3beDYHgm', 'admin', 1);
 ```
 
 Nota: sustituir hash por uno generado en entorno local si se prefiere otra contraseña demo.

@@ -242,5 +242,5 @@ Acciones mínimas: validar/anular partido, cambiar config puntos, editar marcado
 
 ## Datos de prueba (ficticios)
 
-- Admin: `admin@liga-padel.local` / contraseña documentada en `entorno-local.md` (hash en SQL).
+- Admin ficticio: `admin@liga-padel.local` (hash en SQL; la contraseña no está en el repositorio).
 - 4 usuarios jugadores, 2 parejas, 1 liga general borrador, config 180/50.
